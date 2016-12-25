@@ -1,0 +1,3 @@
+1482666938215	Rename local variable 'insert_subs_cmd'
+1482667488137	Extract method 'del_subs_from_db'
+1482669898534	Extract method 'serach_by_personal_data'

@@ -20,8 +20,15 @@ import javax.swing.JSeparator;
 import javax.swing.JRadioButton;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
+
+import Database.DatabaseConnection;
+
 import javax.swing.JSpinner;
 import java.awt.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class MainWindow {
 
@@ -49,6 +56,7 @@ public class MainWindow {
 	private JTextField textField_20;
 	private JTextField textField_21;
 	private JTextField textField_22;
+	private List list1;
 
 	/**
 	 * Launch the application.
@@ -130,16 +138,126 @@ public class MainWindow {
 		JPanel panel_3 = new JPanel();
 		tabbedPane.addTab("Autorzy", new ImageIcon(MainWindow.class.getResource("/mss32/IKONY/Autorzy.png")), panel_3, null);
 		panel_3.setLayout(new MigLayout("", "[][][grow][][][][][][][][][][][][][][][][][][][][][][][][][][][]", "[][][][][][][][][][grow][][][][][]"));
-		
+// ==========================================================================================================================================================		
 		JButton btnNewButton_3 = new JButton("Dodaj");
+		btnNewButton_3.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				try {
+					String imie = textField_5.getText(); // imie textField
+					String ulica = textField_17.getText(); // ulica textField_7
+					String drugie_imie = textField_13.getText(); // drugie imie textField_1
+					String nr_lokalu = textField_18.getText();// nr lokalu textField_8
+					String nazwisko = textField_14.getText(); // nazwisko textField_2
+					String nr_budynku = textField_19.getText(); // nr budynku textField_9
+					String nr_tel = textField_15.getText(); // nr tel textField_3
+					String miasto = textField_20.getText(); // miasto textField_10
+					String email = textField_16.getText(); // email textField_4
+					String kod_pocztowy = textField_21.getText(); // kod pocztowy textField_11
+					String kraj = textField_22.getText(); // kraj textField_12
+					
+					ArrayList<Map<String, Object>> adr = get_next_adr_id();
+					String id_adresu = adr.get(0).get("nextval").toString();
+					
+					ArrayList<Map<String, Object>> daneos = get_next_dane_id();
+					String id_danych = daneos.get(0).get("nextval").toString();
+					
+					ArrayList<Map<String, Object>> user = get_next_user_id();
+					String id_userow = user.get(0).get("nextval").toString();
+					
+					insert_user_to_db(imie, nazwisko, id_adresu, id_danych, id_userow);
+					
+					insert_dane_to_db(imie, drugie_imie, nazwisko, nr_tel, email, id_danych);
+					
+					insert_adres_to_db(ulica, nr_lokalu, nr_budynku, miasto, kod_pocztowy, kraj, id_adresu);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("Nie udalo sie zapisac do bazy.");
+				}
+			}
+
+			
+		});
 		panel_3.add(btnNewButton_3, "cell 0 0");
-		
+		// ==================================================================================================================================================		
 		JButton btnNewButton_4 = new JButton("Usu\u0144");
+		btnNewButton_4.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				try {
+					String imie = textField_5.getText(); // imie textField
+					String ulica = textField_17.getText(); // ulica textField_7
+					String drugie_imie = textField_13.getText(); // drugie imie textField_1
+					String nr_lokalu = textField_18.getText();// nr lokalu textField_8
+					String nazwisko = textField_14.getText(); // nazwisko textField_2
+					String nr_budynku = textField_19.getText(); // nr budynku textField_9
+					String nr_tel = textField_15.getText(); // nr tel textField_3
+					String miasto = textField_20.getText(); // miasto textField_10
+					String email = textField_16.getText(); // email textField_4
+					String kod_pocztowy = textField_21.getText(); // kod pocztowy textField_11
+					String kraj = textField_22.getText(); // kraj textField_12
+					Map<String, Object> result = serach_by_personal_data(imie, nazwisko, nr_tel, email);
+					String user_id = result.get("user_id").toString();
+					String dane_id = result.get("id_danych_osobowych").toString();
+					String adr_id = result.get("id_adr").toString();
+					String del_adr_cmd = "delete from adres where id_adr = "+adr_id;
+					String del_dane_cmd = "delete from dane_osobowe where id_danych_osobowych = "+dane_id;
+					String del_user_cmd = "delete from userzy where user_id = "+user_id;
+					DatabaseConnection.execute_sql_command(del_adr_cmd);
+					DatabaseConnection.execute_sql_command(del_dane_cmd);
+					DatabaseConnection.execute_sql_command(del_user_cmd);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("Nie udalo sie usunac uzytkownika.");
+				}
+			}
+
+			
+		});
 		panel_3.add(btnNewButton_4, "cell 1 0");
-		
+		// ================================================================================================================================================
 		JButton btnNewButton_5 = new JButton("Wyszukaj");
+		btnNewButton_5.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				String imie = textField_5.getText(); // imie textField
+				String ulica = textField_17.getText(); // ulica textField_7
+				String drugie_imie = textField_13.getText(); // drugie imie textField_1
+				String nr_lokalu = textField_18.getText();// nr lokalu textField_8
+				String nazwisko = textField_14.getText(); // nazwisko textField_2
+				String nr_budynku = textField_19.getText(); // nr budynku textField_9
+				String nr_tel = textField_15.getText(); // nr tel textField_3
+				String miasto = textField_20.getText(); // miasto textField_10
+				String email = textField_16.getText(); // email textField_4
+				String kod_pocztowy = textField_21.getText(); // kod pocztowy textField_11
+				String kraj = textField_22.getText(); // kraj textField_12
+				Map<String, Object> result = search_by_name(imie, nazwisko);
+				textField_5.setText(result.get("imie").toString()); // imie textField
+				textField_17.setText(result.get("ulica").toString()); // ulica textField_7
+				textField_13.setText(result.get("drugie_imie").toString()); // drugie imie textField_1
+				textField_18.setText(result.get("nr_lokalu").toString());// nr lokalu textField_8
+				textField_14.setText(result.get("nazwisko").toString()); // nazwisko textField_2
+				textField_19.setText(result.get("nr_budynku").toString());
+				textField_15.setText(result.get("nr_tel").toString());
+				textField_20.setText(result.get("miasto").toString());
+				textField_16.setText(result.get("email").toString());
+				textField_21.setText(result.get("kod_pocztowy").toString());
+				textField_22.setText(result.get("kraj").toString());
+				String id_autora = result.get("user_id").toString();
+				ArrayList<Map<String, Object>> artykuly = DatabaseConnection.fetch_query_from_database("select * from artykul where id_autora = "+id_autora);
+				for(Map<String, Object> m: artykuly)
+				{
+					list1.add(m.get("tytul").toString() + " , " + m.get("data_powstania").toString().split(" ")[0]);
+				}
+			}
+		});
 		panel_3.add(btnNewButton_5, "cell 2 0");
-		
+		// ==========================================================================================================================================================
+		// ==========================================================================================================================================================
+		// ==========================================================================================================================================================
 		JRadioButton rdbtnTrybEdycji_1 = new JRadioButton("Tryb edycji");
 		panel_3.add(rdbtnTrybEdycji_1, "cell 3 0");
 		
@@ -316,8 +434,8 @@ public class MainWindow {
 		Box horizontalBox = Box.createHorizontalBox();
 		panel_3.add(horizontalBox, "cell 0 9 30 2,grow");
 		
-		List list = new List();
-		horizontalBox.add(list);
+		list1 = new List();
+		horizontalBox.add(list1);
 		
 		JPanel panel_2 = new JPanel();
 		tabbedPane.addTab("Subskrybenci", new ImageIcon(MainWindow.class.getResource("/mss32/IKONY/Subskrybcja.png")), panel_2, null);
@@ -471,16 +589,213 @@ public class MainWindow {
 		panel_2.add(horizontalBox_8, "cell 2 0");
 		
 		JButton btnNewButton_1 = new JButton("Dodaj");
+		btnNewButton_1.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				try {
+					String imie = textField.getText();
+					String ulica = textField_7.getText();
+					String drugie_imie = textField_1.getText();
+					String nr_lokalu = textField_8.getText();
+					String nazwisko = textField_2.getText();
+					String nr_budynku = textField_9.getText();
+					String data_rozpoczecia = textField_3.getText();
+					String miasto = textField_10.getText();
+					String data_zakonczenia = textField_6.getText();
+					String kod_pocztowy = textField_11.getText();
+					String ilosc_sztuk = textField_4.getText(); 
+					String kraj = textField_12.getText();
+					String info = "";
+					
+					ArrayList<Map<String, Object>> adr = get_next_adr_id();
+					String id_adresu = adr.get(0).get("nextval").toString();
+					
+					
+					ArrayList<Map<String, Object>> subs = DatabaseConnection.fetch_query_from_database("select subskrybcja_id_seq.nextval from dual");
+					String id_subskrybcji = subs.get(0).get("nextval").toString();
+
+					
+					insert_subs_to_db(imie, drugie_imie, nazwisko, data_rozpoczecia, data_zakonczenia, ilosc_sztuk,
+							id_subskrybcji, info, id_adresu);
+					
+					insert_adres_to_db(ulica, nr_lokalu, nr_budynku, miasto, kod_pocztowy, kraj, id_adresu);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("Nie dalo sie dodac subskrybcji. ");
+				}
+			}
+
+			
+			
+		});
 		panel_2.add(btnNewButton_1, "flowx,cell 0 0");
 		
 		JButton btnNewButton_2 = new JButton("Usu\u0144");
+		btnNewButton_2.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				try {
+					String imie = textField.getText();
+					String drugie_imie = textField_1.getText();
+					String nazwisko = textField_2.getText();
+					String data_rozpoczecia = textField_3.getText();
+					String data_zakonczenia = textField_6.getText();
+					String ilosc_sztuk = textField_4.getText(); 
+					
+					String ulica = textField_7.getText();
+					String nr_lokalu = textField_8.getText();
+					String nr_budynku = textField_9.getText();
+					String miasto = textField_10.getText();
+					String kod_pocztowy = textField_11.getText();
+					String kraj = textField_12.getText();
+					String info = "";
+					
+					del_subs_from_db(imie, drugie_imie, nazwisko, data_rozpoczecia, data_zakonczenia, ilosc_sztuk);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("Nie udalo sie usunac subskrybcji.");
+				}
+				
+			}
+
+			
+			
+		});
 		panel_2.add(btnNewButton_2, "cell 0 0");
 		
 		JButton btnNewButton = new JButton("Wyszukaj");
+		btnNewButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				try {
+					String imie = textField.getText();
+					String ulica = textField_7.getText();
+					String drugie_imie = textField_1.getText();
+					String nr_lokalu = textField_8.getText();
+					String nazwisko = textField_2.getText();
+					String nr_budynku = textField_9.getText();
+					String data_rozpoczecia = textField_3.getText();
+					String miasto = textField_10.getText();
+					String data_zakonczenia = textField_6.getText();
+					String kod_pocztowy = textField_11.getText();
+					String ilosc_sztuk = textField_4.getText(); 
+					String kraj = textField_12.getText();
+					String info = "";
+					Map<String, Object> result = search_subs_by_name(imie,nazwisko);
+					textField.setText(result.get("imie").toString());
+					textField_7.setText(result.get("ulica").toString());
+					textField_1.setText(result.get("drugie_imie").toString());
+					textField_8.setText(result.get("nr_lokalu").toString());
+					textField_2.setText(result.get("nazwisko").toString());
+					textField_9.setText(result.get("nr_budynku").toString());
+					textField_3.setText(result.get("data_rozpoczecia").toString().split(" ")[0]);
+					textField_10.setText(result.get("miasto").toString());
+					textField_6.setText(result.get("data_zakonczenia").toString().split(" ")[0]);
+					textField_11.setText(result.get("kod_pocztowy").toString());
+					textField_4.setText(result.get("ilosc_sztuk").toString());
+					textField_12.setText(result.get("kraj").toString());
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					System.out.println("Nie udalo sie wyszukac subskrybcji.");
+				}
+				
+			}
+			
+		});
 		panel_2.add(btnNewButton, "cell 0 0");
 		
 		JRadioButton rdbtnTrybEdycji = new JRadioButton("Tryb edycji");
 		panel_2.add(rdbtnTrybEdycji, "cell 0 0 9 1,grow");
+	}
+	
+	private void insert_subs_to_db(String imie, String drugie_imie, String nazwisko, String data_rozpoczecia,
+			String data_zakonczenia, String ilosc_sztuk, String id_subskrybcji, String info, String id_adresu) {
+		String insert_subs_cmd = "";
+		insert_subs_cmd += "insert into subskrybcja (id_subskrybcji, data_rozpoczecia, data_zakonczenia, ilosc_sztuk, imie, drugie_imie, nazwisko, dodatkowe_info, id_adresu) ";
+		insert_subs_cmd += "values (" + id_subskrybcji + ", TO_DATE('" + data_rozpoczecia + "', 'yyyy/mm/dd'), TO_DATE('" + data_zakonczenia + "', 'yyyy/mm/dd'), " + ilosc_sztuk + ", '" + imie + "', '" + drugie_imie + "', '" + nazwisko + "', '" + info + "', "+id_adresu+")";
+		DatabaseConnection.execute_sql_command(insert_subs_cmd);
+	}
+	
+	private ArrayList<Map<String, Object>> get_next_user_id() {
+		ArrayList<Map<String, Object>> user = DatabaseConnection.fetch_query_from_database("select user_id_seq.nextval from dual");
+		return user;
+	}
+
+	private void del_subs_from_db(String imie, String drugie_imie, String nazwisko, String data_rozpoczecia,
+			String data_zakonczenia, String ilosc_sztuk) {
+		String del_subs_cmd = "";
+		del_subs_cmd += "delete from subskrybcja where imie = '"+imie+"' and drugie_imie = '"+drugie_imie+"' and nazwisko = '"+nazwisko;
+		del_subs_cmd += "' and data_rozpoczecia = TO_DATE('"+data_rozpoczecia+"', 'yyyy/mm/dd') and data_zakonczenia = TO_DATE('"+data_zakonczenia+"', 'yyyy/mm/dd') ";
+		del_subs_cmd += "and ilosc_sztuk = " + ilosc_sztuk;
+		DatabaseConnection.execute_sql_command(del_subs_cmd);
+	}
+	
+	private ArrayList<Map<String, Object>> get_next_dane_id() {
+		ArrayList<Map<String, Object>> daneos = DatabaseConnection.fetch_query_from_database("select daneos_id_seq.nextval from dual");
+		return daneos;
+	}
+
+	private ArrayList<Map<String, Object>> get_next_adr_id() {
+		ArrayList<Map<String, Object>> adr = DatabaseConnection.fetch_query_from_database("select adres_id_seq.nextval from dual");
+		return adr;
+	}
+
+	private void insert_user_to_db(String imie, String nazwisko, String id_adresu, String id_danych,
+			String id_userow) {
+		String insert_user_cmd = "";
+		insert_user_cmd += "insert into userzy (user_id, login, password, role, id_adresu, id_danych_os) ";
+		insert_user_cmd += "values (" + id_userow + ", '" + imie + "', '" + nazwisko + "', 'Autor', " + id_adresu + ", " + id_danych + ")";
+		DatabaseConnection.execute_sql_command(insert_user_cmd);
+	}
+
+	private void insert_dane_to_db(String imie, String drugie_imie, String nazwisko, String nr_tel,
+			String email, String id_danych) {
+		String insert_dane_cmd = "";
+		insert_dane_cmd += "insert into dane_osobowe (imie, nazwisko, id_danych_osobowych, drugie_imie, nr_tel, email) ";
+		insert_dane_cmd += "values ('" + imie + "', '" + nazwisko + "', " + id_danych + ", '" + drugie_imie + "', " + nr_tel + ", '" + email + "')";
+		DatabaseConnection.execute_sql_command(insert_dane_cmd);
+	}
+	
+	private Map<String, Object> serach_by_personal_data(String imie, String nazwisko, String nr_tel,
+			String email) {
+		String cmd = "";
+		cmd += "select * from userzy join dane_osobowe on userzy.id_danych_os = dane_osobowe.id_danych_osobowych join adres on userzy.id_adresu = adres.id_adr where ";
+		cmd += "dane_osobowe.imie = '"+imie+"' and dane_osobowe.nazwisko = '"+nazwisko+"' and dane_osobowe.nr_tel = "+nr_tel+" and dane_osobowe.email = '"+email+"'";
+		ArrayList<Map<String, Object>> output = DatabaseConnection.fetch_query_from_database(cmd);
+		Map<String, Object> result = output.get(0);
+		return result;
+		
+	}
+	private Map<String, Object> search_subs_by_name(String imie, String nazwisko) {
+		String cmd = "";
+		cmd += "select * from subskrybcja join adres on subskrybcja.id_adresu = adres.id_adr where ";
+		cmd += "imie = '"+imie+"' and nazwisko = '"+nazwisko+"'";
+		ArrayList<Map<String, Object>> output = DatabaseConnection.fetch_query_from_database(cmd);
+		Map<String, Object> result = output.get(0);
+		return result;
+		
+	}
+	private Map<String, Object> search_by_name(String imie, String nazwisko) {
+		String cmd = "";
+		cmd += "select * from userzy join dane_osobowe on userzy.id_danych_os = dane_osobowe.id_danych_osobowych join adres on userzy.id_adresu = adres.id_adr where ";
+		cmd += "dane_osobowe.imie = '"+imie+"' and dane_osobowe.nazwisko = '"+nazwisko+"'";
+		ArrayList<Map<String, Object>> output = DatabaseConnection.fetch_query_from_database(cmd);
+		Map<String, Object> result = output.get(0);
+		return result;
+		
+	}
+	private void insert_adres_to_db(String ulica, String nr_lokalu, String nr_budynku, String miasto,
+			String kod_pocztowy, String kraj, String id_adresu) {
+		String insert_adr_cmd = "";
+		insert_adr_cmd += "insert into adres (id_adr, ulica, kod_pocztowy, miasto, kraj, nr_budynku, nr_lokalu) ";
+		insert_adr_cmd += "values (" + id_adresu + ", '" + ulica + "', '" + kod_pocztowy + "', '" + miasto + "', '" + kraj + "', " + nr_budynku + ", " + nr_lokalu + ")";
+		DatabaseConnection.execute_sql_command(insert_adr_cmd);
 	}
 
 }

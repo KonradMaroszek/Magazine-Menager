@@ -1,0 +1,8 @@
+1482530054238	Rename local variable 'cmd'
+1482532486295	Extract method 'insert_adres_to_db'
+1482532511589	Extract method 'insert_dane_to_db'
+1482532524605	Extract method 'insert_user_to_db'
+1482532579266	Extract method 'get_next_adr_id'
+1482532593751	Extract method 'get_next_dane_id'
+1482532606820	Extract method 'get_next_user_id'
+1482592054257	Extract method 'insert_subs_to_db'
