@@ -27,8 +27,19 @@ import javax.swing.JSpinner;
 import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Map;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.table.DefaultTableModel;
 
 public class MainWindow {
 
@@ -57,6 +68,23 @@ public class MainWindow {
 	private JTextField textField_21;
 	private JTextField textField_22;
 	private List list1;
+	private JTable table;
+	private JTable table_1;
+	private JTable table_3;
+	private JTable table_4;
+	private JTable table_5;
+	private JTable table_2;
+	private JTextField textField_23;
+	private JTextField textField_24;
+	private JTextField textField_25;
+	private JTextField textField_26;
+	private JTextField textField_27;
+	private JTextField textField_28;
+	private JTextField textField_29;
+	private JTextField textField_30;
+	private JTextField textField_31;
+	private JTextField textField_32;
+	private JTextField textField_33;
 
 	/**
 	 * Launch the application.
@@ -97,43 +125,367 @@ public class MainWindow {
 		
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("Archiwum", new ImageIcon(MainWindow.class.getResource("/mss32/IKONY/Archiwum.png")), panel, null);
-		panel.setLayout(new MigLayout("", "[grow]", "[grow]"));
+		panel.setLayout(null);
 		
 		JTabbedPane tabbedPane_1 = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane_1.setBounds(7, 6, 979, 127);
 		tabbedPane_1.setBackground(Color.LIGHT_GRAY);
-		panel.add(tabbedPane_1, "cell 0 0,grow");
+		panel.add(tabbedPane_1);
 		
 		JPanel panel_5 = new JPanel();
 		tabbedPane_1.addTab("Wydania", new ImageIcon(MainWindow.class.getResource("/mss32/IKONY/Wydanie.png")), panel_5, null);
+		panel_5.setLayout(null);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 11, 508, 70);
+		panel_5.add(scrollPane);
+		
+		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{"3", "2016-12-10", "1"},
+				{"6", "2016-12-17", "2"},
+				{"71", "2017-01-03", "3"},
+			},
+			new String[] {
+				"Liczba subskrybentow", "Data wydania", "Numer wydania"
+			}
+		));
+		table.getColumnModel().getColumn(0).setPreferredWidth(129);
+		table.getColumnModel().getColumn(1).setPreferredWidth(105);
+		table.getColumnModel().getColumn(2).setPreferredWidth(116);
+		scrollPane.setViewportView(table);
 		
 		JPanel panel_6 = new JPanel();
 		tabbedPane_1.addTab("Artyku\u0142y", new ImageIcon(MainWindow.class.getResource("/mss32/IKONY/Artyku\u0142.png")), panel_6, null);
+		panel_6.setLayout(null);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(0, 0, 508, 70);
+		panel_6.add(scrollPane_1);
+		
+		table_1 = new JTable();
+		table_1.setModel(new DefaultTableModel(
+			new Object[][] {
+				{"2015-10-10", "Konrad Maroszek", "Systemy operacyjne"},
+				{"2014-09-11", "Tomasz Teter", "Wst\u0119p do programowania strukturalnego w C++"},
+				{"2014-10-15", "Konrad Maroszek", "Zastosowanie sieci neuronowych"},
+				{"2015-02-17", "Tomasz Teter", "Python - advanced script programming"},
+			},
+			new String[] {
+				"Data powstania", "Autor", "Tytul"
+			}
+		));
+		table_1.getColumnModel().getColumn(0).setPreferredWidth(121);
+		table_1.getColumnModel().getColumn(1).setPreferredWidth(114);
+		table_1.getColumnModel().getColumn(2).setPreferredWidth(308);
+		scrollPane_1.setViewportView(table_1);
 		
 		JPanel panel_7 = new JPanel();
 		tabbedPane_1.addTab("Reklamy", new ImageIcon(MainWindow.class.getResource("/mss32/IKONY/reklamy.png")), panel_7, null);
+		panel_7.setLayout(null);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(0, 0, 508, 70);
+		panel_7.add(scrollPane_2);
+		
+		table_2 = new JTable();
+		table_2.setModel(new DefaultTableModel(
+			new Object[][] {
+				{"Co dwa zubry to nie jeden", "\u017Bubr SA."},
+				{"Free hosting server", "Linode"},
+			},
+			new String[] {
+				"Tytul", "Reklamodawca"
+			}
+		));
+		table_2.getColumnModel().getColumn(0).setPreferredWidth(159);
+		scrollPane_2.setViewportView(table_2);
 		
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Aktualne wydanie", new ImageIcon(MainWindow.class.getResource("/mss32/IKONY/Magazyn.png")), panel_1, null);
-		panel_1.setLayout(new MigLayout("", "[grow]", "[grow]"));
+		panel_1.setLayout(null);
 		
 		JTabbedPane tabbedPane_2 = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane_2.setBounds(10, 6, 976, 368);
 		tabbedPane_2.setBackground(Color.LIGHT_GRAY);
-		panel_1.add(tabbedPane_2, "cell 0 0,grow");
+		panel_1.add(tabbedPane_2);
 		
 		JPanel panel_8 = new JPanel();
 		tabbedPane_2.addTab("Informacje", new ImageIcon(MainWindow.class.getResource("/mss32/IKONY/Informacja.png")), panel_8, null);
+		panel_8.setLayout(null);
+		
+		JTextArea textArea = new JTextArea();
+		textArea.setBounds(10, 11, 466, 300);
+		panel_8.add(textArea);
 		
 		JPanel panel_11 = new JPanel();
 		tabbedPane_2.addTab("Spis tre\u015Bci", new ImageIcon(MainWindow.class.getResource("/mss32/IKONY/spis tresci.png")), panel_11, null);
+		panel_11.setLayout(null);
+		
+		JScrollPane scrollPane_3 = new JScrollPane();
+		scrollPane_3.setBounds(10, 11, 317, 261);
+		panel_11.add(scrollPane_3);
+		
+		table_3 = new JTable();
+		table_3.setModel(new DefaultTableModel(
+			new Object[][] {
+				{"Zastosowanie sieci neuronowych", "5"},
+				{null, null},
+			},
+			new String[] {
+				"Artykul", "Strona"
+			}
+		));
+		table_3.getColumnModel().getColumn(0).setPreferredWidth(196);
+		scrollPane_3.setViewportView(table_3);
 		
 		JPanel panel_9 = new JPanel();
 		tabbedPane_2.addTab("Artyku\u0142y", new ImageIcon(MainWindow.class.getResource("/mss32/IKONY/Artyku\u0142.png")), panel_9, null);
+		panel_9.setLayout(null);
+		
+		JScrollPane scrollPane_4 = new JScrollPane();
+		scrollPane_4.setBounds(10, 11, 520, 300);
+		panel_9.add(scrollPane_4);
+		
+		table_4 = new JTable();
+		table_4.setModel(new DefaultTableModel(
+			new Object[][] {
+				{"2014-10-15", "Konrad Maroszek", "Zastosowanie sieci neuronowych"},
+				{null, null, null},
+			},
+			new String[] {
+				"Data powstania", "Autor", "Tytul"
+			}
+		));
+		table_4.getColumnModel().getColumn(0).setPreferredWidth(120);
+		table_4.getColumnModel().getColumn(1).setPreferredWidth(105);
+		table_4.getColumnModel().getColumn(2).setPreferredWidth(146);
+		scrollPane_4.setViewportView(table_4);
 		
 		JPanel panel_10 = new JPanel();
 		tabbedPane_2.addTab("Reklamy", new ImageIcon(MainWindow.class.getResource("/mss32/IKONY/reklamy.png")), panel_10, null);
+		panel_10.setLayout(null);
+		
+		JScrollPane scrollPane_5 = new JScrollPane();
+		scrollPane_5.setBounds(10, 24, 250, 287);
+		panel_10.add(scrollPane_5);
+		
+		table_5 = new JTable();
+		table_5.setModel(new DefaultTableModel(
+			new Object[][] {
+				{"Free hosting ", "Linode"},
+			},
+			new String[] {
+				"Tytul", "Reklamodawca"
+			}
+		));
+		table_5.getColumnModel().getColumn(1).setPreferredWidth(137);
+		scrollPane_5.setViewportView(table_5);
 		
 		JPanel panel_4 = new JPanel();
 		tabbedPane.addTab("Kontrahenci i reklamodawcy", new ImageIcon(MainWindow.class.getResource("/mss32/IKONY/Reklamodawcy.png")), panel_4, null);
+		panel_4.setLayout(null);
+		
+		JButton button = new JButton("Dodaj");
+		button.setBounds(0, 7, 77, 23);
+		panel_4.add(button);
+		
+		JButton button_1 = new JButton("Usu\u0144");
+		button_1.setBounds(87, 7, 73, 23);
+		panel_4.add(button_1);
+		
+		JButton button_2 = new JButton("Wyszukaj");
+		button_2.setBounds(170, 7, 127, 23);
+		panel_4.add(button_2);
+		
+		JRadioButton radioButton = new JRadioButton("Tryb edycji");
+		radioButton.setBounds(303, 7, 105, 23);
+		panel_4.add(radioButton);
+		
+		Box horizontalBox_9 = Box.createHorizontalBox();
+		horizontalBox_9.setBounds(0, 63, 977, 20);
+		panel_4.add(horizontalBox_9);
+		
+		JLabel label = new JLabel("Imie:");
+		horizontalBox_9.add(label);
+		
+		Component horizontalStrut_35 = Box.createHorizontalStrut(20);
+		horizontalBox_9.add(horizontalStrut_35);
+		
+		Component horizontalStrut_36 = Box.createHorizontalStrut(30);
+		horizontalBox_9.add(horizontalStrut_36);
+		
+		textField_23 = new JTextField();
+		textField_23.setColumns(10);
+		horizontalBox_9.add(textField_23);
+		
+		Component horizontalStrut_37 = Box.createHorizontalStrut(20);
+		horizontalBox_9.add(horizontalStrut_37);
+		
+		Component horizontalStrut_38 = Box.createHorizontalStrut(20);
+		horizontalBox_9.add(horizontalStrut_38);
+		
+		JLabel label_1 = new JLabel("Ulica:");
+		horizontalBox_9.add(label_1);
+		
+		Component horizontalStrut_39 = Box.createHorizontalStrut(20);
+		horizontalBox_9.add(horizontalStrut_39);
+		
+		Component horizontalStrut_40 = Box.createHorizontalStrut(20);
+		horizontalBox_9.add(horizontalStrut_40);
+		
+		textField_24 = new JTextField();
+		textField_24.setColumns(10);
+		horizontalBox_9.add(textField_24);
+		
+		Box horizontalBox_10 = Box.createHorizontalBox();
+		horizontalBox_10.setBounds(0, 87, 977, 20);
+		panel_4.add(horizontalBox_10);
+		
+		JLabel label_2 = new JLabel("Drugie imie:");
+		horizontalBox_10.add(label_2);
+		
+		Component horizontalStrut_41 = Box.createHorizontalStrut(10);
+		horizontalBox_10.add(horizontalStrut_41);
+		
+		textField_25 = new JTextField();
+		textField_25.setColumns(10);
+		horizontalBox_10.add(textField_25);
+		
+		Component horizontalStrut_42 = Box.createHorizontalStrut(20);
+		horizontalBox_10.add(horizontalStrut_42);
+		
+		Component horizontalStrut_43 = Box.createHorizontalStrut(20);
+		horizontalBox_10.add(horizontalStrut_43);
+		
+		JLabel label_3 = new JLabel("Nr lokalu:");
+		horizontalBox_10.add(label_3);
+		
+		Component horizontalStrut_44 = Box.createHorizontalStrut(20);
+		horizontalBox_10.add(horizontalStrut_44);
+		
+		textField_26 = new JTextField();
+		textField_26.setColumns(10);
+		horizontalBox_10.add(textField_26);
+		
+		Box horizontalBox_11 = Box.createHorizontalBox();
+		horizontalBox_11.setBounds(0, 111, 977, 20);
+		panel_4.add(horizontalBox_11);
+		
+		JLabel label_4 = new JLabel("Nazwisko:");
+		horizontalBox_11.add(label_4);
+		
+		Component horizontalStrut_45 = Box.createHorizontalStrut(20);
+		horizontalBox_11.add(horizontalStrut_45);
+		
+		textField_27 = new JTextField();
+		textField_27.setColumns(10);
+		horizontalBox_11.add(textField_27);
+		
+		Component horizontalStrut_46 = Box.createHorizontalStrut(20);
+		horizontalBox_11.add(horizontalStrut_46);
+		
+		Component horizontalStrut_47 = Box.createHorizontalStrut(20);
+		horizontalBox_11.add(horizontalStrut_47);
+		
+		JLabel label_5 = new JLabel("Nr budynku:");
+		horizontalBox_11.add(label_5);
+		
+		Component horizontalStrut_48 = Box.createHorizontalStrut(7);
+		horizontalBox_11.add(horizontalStrut_48);
+		
+		textField_28 = new JTextField();
+		textField_28.setColumns(10);
+		horizontalBox_11.add(textField_28);
+		
+		Box horizontalBox_12 = Box.createHorizontalBox();
+		horizontalBox_12.setBounds(0, 135, 977, 20);
+		panel_4.add(horizontalBox_12);
+		
+		JLabel label_6 = new JLabel("Nr telefonu:");
+		horizontalBox_12.add(label_6);
+		
+		Component horizontalStrut_49 = Box.createHorizontalStrut(13);
+		horizontalBox_12.add(horizontalStrut_49);
+		
+		textField_29 = new JTextField();
+		textField_29.setColumns(10);
+		horizontalBox_12.add(textField_29);
+		
+		Component horizontalStrut_50 = Box.createHorizontalStrut(20);
+		horizontalBox_12.add(horizontalStrut_50);
+		
+		Component horizontalStrut_51 = Box.createHorizontalStrut(20);
+		horizontalBox_12.add(horizontalStrut_51);
+		
+		JLabel label_7 = new JLabel("Miasto:");
+		horizontalBox_12.add(label_7);
+		
+		Component horizontalStrut_52 = Box.createHorizontalStrut(30);
+		horizontalBox_12.add(horizontalStrut_52);
+		
+		textField_30 = new JTextField();
+		textField_30.setColumns(10);
+		horizontalBox_12.add(textField_30);
+		
+		Box horizontalBox_13 = Box.createHorizontalBox();
+		horizontalBox_13.setBounds(0, 159, 977, 20);
+		panel_4.add(horizontalBox_13);
+		
+		JLabel label_8 = new JLabel("Adres email:");
+		horizontalBox_13.add(label_8);
+		
+		Component horizontalStrut_53 = Box.createHorizontalStrut(8);
+		horizontalBox_13.add(horizontalStrut_53);
+		
+		textField_31 = new JTextField();
+		textField_31.setColumns(10);
+		horizontalBox_13.add(textField_31);
+		
+		Component horizontalStrut_54 = Box.createHorizontalStrut(20);
+		horizontalBox_13.add(horizontalStrut_54);
+		
+		Component horizontalStrut_55 = Box.createHorizontalStrut(20);
+		horizontalBox_13.add(horizontalStrut_55);
+		
+		JLabel label_9 = new JLabel("K. pocztowy:");
+		horizontalBox_13.add(label_9);
+		
+		textField_32 = new JTextField();
+		textField_32.setColumns(10);
+		horizontalBox_13.add(textField_32);
+		
+		Box horizontalBox_14 = Box.createHorizontalBox();
+		horizontalBox_14.setBounds(0, 183, 977, 20);
+		panel_4.add(horizontalBox_14);
+		
+		Component horizontalStrut_56 = Box.createHorizontalStrut(510);
+		horizontalBox_14.add(horizontalStrut_56);
+		
+		JLabel label_10 = new JLabel("Kraj:");
+		horizontalBox_14.add(label_10);
+		
+		Component horizontalStrut_57 = Box.createHorizontalStrut(47);
+		horizontalBox_14.add(horizontalStrut_57);
+		
+		textField_33 = new JTextField();
+		textField_33.setColumns(10);
+		horizontalBox_14.add(textField_33);
+		
+		Box horizontalBox_15 = Box.createHorizontalBox();
+		horizontalBox_15.setBounds(0, 207, 73, 14);
+		panel_4.add(horizontalBox_15);
+		
+		JLabel label_11 = new JLabel("Lista reklam");
+		horizontalBox_15.add(label_11);
+		
+		Box horizontalBox_16 = Box.createHorizontalBox();
+		horizontalBox_16.setBounds(0, 225, 977, 153);
+		panel_4.add(horizontalBox_16);
+		
+		List list = new List();
+		horizontalBox_16.add(list);
 		
 		JPanel panel_3 = new JPanel();
 		tabbedPane.addTab("Autorzy", new ImageIcon(MainWindow.class.getResource("/mss32/IKONY/Autorzy.png")), panel_3, null);
@@ -797,5 +1149,34 @@ public class MainWindow {
 		insert_adr_cmd += "values (" + id_adresu + ", '" + ulica + "', '" + kod_pocztowy + "', '" + miasto + "', '" + kraj + "', " + nr_budynku + ", " + nr_lokalu + ")";
 		DatabaseConnection.execute_sql_command(insert_adr_cmd);
 	}
-
+	
+	private void checkNickname() throws IOException, Exception {
+		Socket sock = new Socket(InetAddress.getByName("localhost"), 1234);
+		PrintWriter out = new PrintWriter(new OutputStreamWriter(sock.getOutputStream()));
+		String login = loginTextField.getText(); // zamien na nasza nazwe 
+		String password = passwordTextField.getText();// zamien na nasza nazwe 
+		out.println(login);
+		out.flush();
+		out.println(password);
+		out.flush();
+		BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+		String str = null;
+		while(true)
+		{
+			if((str = in.readLine()) != null)
+			{
+				if(str.contains("logged"))
+				{
+					// PRZEJDZ DALEJ ( UDALO SIE ZALOGOWAC )
+				}
+				else
+				{
+					// nIE UDALO SIE ZALOGOWAC, DODAJ JAKIS LIPNY LABEL Z PUSTYM NAPISEM, I NAZWIJ GO wrongNickname.
+					wrongNickname.setText("Zly login lub haslo! Podaj poprawne dane.");
+					throw new Exception();
+				}
+				break;
+			}
+		}
+	}
 }

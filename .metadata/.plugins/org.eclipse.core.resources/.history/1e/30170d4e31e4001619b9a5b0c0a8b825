@@ -1,0 +1,252 @@
+package ServerClientFTP;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.awt.event.ActionEvent;
+import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
+
+public class ClientGUI {
+
+	private JFrame frame;
+	private Socket sock = null;
+	private JTextArea output_field;
+	private JTextField loginTextField;
+	private JLabel lblNumerPortu;
+	private JLabel lblAdresServera;
+	private JTextField portTextField;
+	private JTextField addressTextField;
+	private JLabel wrongPortNumber;
+	private JLabel wrongServerAddress;
+	private JLabel wrongNickname;
+	private JTextField input_field;
+	private JLabel timerLabel;
+	private JButton leaveButton;
+	private Thread reading = null;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ClientGUI window = new ClientGUI();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public ClientGUI() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 450, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		JButton joinButton = new JButton("Rozpocznij quiz");
+		joinButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int port_number = 0;
+				String server_address = null;
+				try
+				{
+					port_number = Integer.parseInt(portTextField.getText());
+					server_address = addressTextField.getText();
+					sock = new Socket(InetAddress.getByName(server_address), port_number);
+					checkNickname();
+					
+					reading = new ReadingGUI(sock, output_field, timerLabel);
+					sock.setTcpNoDelay(true);
+					
+					reading.start();
+					wrongServerAddress.setText("");
+					wrongPortNumber.setText("");
+					wrongNickname.setText("");
+					
+					
+					
+				}
+				catch(NumberFormatException e1)
+				{
+					System.out.println("Wrong port number.");
+					wrongPortNumber.setText("Wrong port number.");
+				}
+				catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					wrongServerAddress.setText("Wrong server address.");
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					wrongServerAddress.setText("Wrong server address.");
+					wrongPortNumber.setText("Wrong port number.");
+					e.printStackTrace();
+				} catch(Exception exc)
+				{
+					System.out.println("Couldnt connect to server.");
+					try {
+						if(sock != null) sock.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+				
+			}
+
+			private void checkNickname() throws IOException, Exception {
+				PrintWriter out = new PrintWriter(new OutputStreamWriter(sock.getOutputStream()));
+				String login = loginTextField.getText();
+				//String password = passwordTextField.getText();
+				out.println(login);
+				out.flush();
+				out.println(password);
+				out.flush();
+				BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+				String str = null;
+				while(true)
+				{
+					if((str = in.readLine()) != null)
+					{
+						if(str.contains("logged"))
+						{
+							// JTEXTAREA set text str
+							output_field.setText(output_field.getText() + "\n" + str);
+						}
+						else
+						{
+							wrongNickname.setText("Login zajety, prosze podaj inny.");
+							throw new Exception();
+						}
+						break;
+					}
+				}
+			}
+			
+		
+		});
+		joinButton.setBounds(38, 195, 115, 23);
+		frame.getContentPane().add(joinButton);
+		
+		loginTextField = new JTextField();
+		loginTextField.setBounds(38, 161, 115, 23);
+		frame.getContentPane().add(loginTextField);
+		loginTextField.setColumns(10);
+		
+		JLabel lblPodajSwojNick = new JLabel("Podaj swoj login: ");
+		lblPodajSwojNick.setBounds(38, 130, 121, 20);
+		frame.getContentPane().add(lblPodajSwojNick);
+		
+		lblNumerPortu = new JLabel("Numer portu:");
+		lblNumerPortu.setBounds(38, 26, 86, 14);
+		frame.getContentPane().add(lblNumerPortu);
+		
+		lblAdresServera = new JLabel("Adres servera:");
+		lblAdresServera.setBounds(38, 74, 86, 14);
+		frame.getContentPane().add(lblAdresServera);
+		
+		portTextField = new JTextField();
+		portTextField.setBounds(38, 43, 86, 20);
+		frame.getContentPane().add(portTextField);
+		portTextField.setColumns(10);
+		
+		addressTextField = new JTextField();
+		addressTextField.setBounds(38, 99, 86, 20);
+		frame.getContentPane().add(addressTextField);
+		addressTextField.setColumns(10);
+		
+		wrongPortNumber = new JLabel("");
+		wrongPortNumber.setBounds(163, 189, 77, 20);
+		frame.getContentPane().add(wrongPortNumber);
+		
+		wrongServerAddress = new JLabel("");
+		wrongServerAddress.setBounds(163, 214, 77, 18);
+		frame.getContentPane().add(wrongServerAddress);
+		
+		wrongNickname = new JLabel("");
+		wrongNickname.setBounds(157, 243, 108, 19);
+		frame.getContentPane().add(wrongNickname);
+		
+		input_field = new JTextField();
+		input_field.setBounds(169, 146, 255, 38);
+		frame.getContentPane().add(input_field);
+		input_field.setColumns(10);
+		
+		JButton sendButton = new JButton("Wyslij");
+		sendButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					Thread writing = new WritingGUI(sock.getOutputStream(), input_field, timerLabel);
+					writing.start();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		});
+		sendButton.setBounds(335, 195, 89, 23);
+		frame.getContentPane().add(sendButton);
+		
+		leaveButton = new JButton("Przerwij quiz");
+		leaveButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if(sock != null)
+				{
+					try {
+						if(sock != null) sock.close();
+						output_field.setText(output_field.getText() + "\n Przerwano quiz!\n");
+					} catch (IOException exc) {
+						// TODO Auto-generated catch block
+						exc.printStackTrace();
+					}
+				}
+				
+			}
+		});
+		leaveButton.setBounds(335, 229, 89, 23);
+		frame.getContentPane().add(leaveButton);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(163, 11, 267, 108);
+		frame.getContentPane().add(scrollPane);
+		
+		output_field = new JTextArea();
+		scrollPane.setViewportView(output_field);
+		
+		JLabel lblPozostayCzas = new JLabel("Pozostaly czas :");
+		lblPozostayCzas.setBounds(169, 124, 86, 23);
+		frame.getContentPane().add(lblPozostayCzas);
+		
+		timerLabel = new JLabel("0s");
+		timerLabel.setBounds(251, 124, 71, 23);
+		frame.getContentPane().add(timerLabel);
+	}
+		}
+		

@@ -15,7 +15,7 @@ public class DatabaseConnection {
 	    Handle handle = null;
 	    try {
 	    	DBI dbi = new DBI("jdbc:oracle:thin:@127.0.0.1:1521/czasopisma",
-          		  "teter", "fx0507");
+	          		  "teter", "fx0507");
 	        handle = dbi.open();
 	        Query<Map<String, Object>> query = handle.createQuery(cmd);
 	        ArrayList<Map<String, Object>> result = (ArrayList<Map<String, Object>>) query.list();
@@ -36,7 +36,7 @@ public class DatabaseConnection {
 		
 		try{
 			DBI dbi = new DBI("jdbc:oracle:thin:@127.0.0.1:1521/czasopisma",
-		      		  "teter", "fx0507");
+	          		  "teter", "fx0507");
 		  handle = dbi.open();
 		  handle.execute(cmd);
 		  handle.commit();
